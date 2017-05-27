@@ -6,18 +6,19 @@ class EmailCheckerTCPHandler(socketserver.BaseRequestHandler):
     """
     The RequestHandler class for EmailChecker server.
     """
-    def get_request(self):
-        self.request.sendall('dddd')
-
     
     def isEmailValid(self, email):
         checker = re.compile('^[a-b][\w-]+@[a-z0-9-]+\.[a-z]{1,3}$')
         return checker.match(email)
 
     def handle(self):
-        # while True:
+        while True:
             # self.request is the TCP socket connected to the client
             data = self.request.recv(1024).strip().decode("utf-8")
+            
+            if not data:
+                break
+
             print('{} wrote:'.format(self.client_address[0]))
             print('checking {}'.format(data))
             
@@ -26,6 +27,7 @@ class EmailCheckerTCPHandler(socketserver.BaseRequestHandler):
 
             # send result
             self.request.send(resultMes.encode())
+            # self.request.sendall(b'pidary!!1')
 
 def init(host = 'localhost', port=9000):
     # Create the server, binding to localhost on port 9999

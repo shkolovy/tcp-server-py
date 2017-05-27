@@ -14,10 +14,21 @@ def init(host = 'localhost', port=9000):
     try:
         # Connect to server and send data
         sock.connect((host, port))
-        sock.send(input('type email: ').encode())
 
-        # Receive data from the server and shut down
+        print('--------')
         print(str(sock.recv(1024), "utf-8"))
+        print('--------')
+
+        input_mes = 'type email: '
+        mes = input(input_mes)
+
+        while mes != 'q':
+            sock.send(mes.encode())
+
+            # Receive data from the server and shut down
+            print(str(sock.recv(1024), "utf-8"))
+            mes = input(input_mes)
+
     except ConnectionRefusedError:
         print('can\'t connect to the server {}:{}'.format(host, port))
     finally:
@@ -25,5 +36,8 @@ def init(host = 'localhost', port=9000):
 
 
 if __name__ == "__main__":
-    HOST, PORT = '' or sys.argv[1], '' or int(sys.argv[2])
-    init(HOST, PORT)
+    if len(sys.argv) >= 2:
+        HOST, PORT = sys.argv[1], int(sys.argv[2])
+        init(HOST, PORT)
+
+    init()
